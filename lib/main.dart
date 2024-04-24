@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:photo_gram/auth_service.dart';
-import 'package:photo_gram/firebase_options.dart';
-import 'package:photo_gram/login.dart';
+import 'package:photo_gram/screens/auth_service.dart';
+import 'package:photo_gram/backend/firebase_options.dart';
+import 'package:photo_gram/screens/login.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:photo_gram/backend/user_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -10,7 +11,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(ChangeNotifierProvider(
-    create: (context) => AuthService(),
+    create: (_) => UserProvider(),
     child: const MyApp(),
   ));
 }

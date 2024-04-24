@@ -1,10 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:photo_gram/backend/user_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:photo_gram/auth_service.dart';
+import 'package:photo_gram/screens/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:photo_gram/utils.dart';
+import 'package:photo_gram/backend/utils.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -21,7 +22,7 @@ class _RegisterState extends State<Register> {
   Uint8List? _image;
 
   void signUp() async {
-    final authService = Provider.of<AuthService>(
+    final authService = Provider.of<UserProvider>(
       context,
       listen: false,
     );
@@ -31,7 +32,7 @@ class _RegisterState extends State<Register> {
           passwordController.text.isNotEmpty ||
           usernameController.text.isNotEmpty ||
           bioController.text.isNotEmpty) {
-        await authService.signUpWithEmailAndPassword(
+        await authService.auth.signUpWithEmailAndPassword(
             emailController.text,
             passwordController.text,
             usernameController.text,

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:photo_gram/auth_service.dart';
-import 'package:photo_gram/home_page.dart';
-import 'package:photo_gram/register.dart';
+import 'package:photo_gram/screens/auth_service.dart';
+import 'package:photo_gram/screens/home_page.dart';
+import 'package:photo_gram/screens/register.dart';
+import 'package:photo_gram/backend/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -16,13 +17,13 @@ class _LoginState extends State<Login> {
   final passwordController = TextEditingController();
 
   void signIn() async {
-    final authService = Provider.of<AuthService>(
+    final authService = Provider.of<UserProvider>(
       context,
       listen: false,
     );
 
     try {
-      await authService.signInWithEmailAndPassword(
+      await authService.auth.signInWithEmailAndPassword(
           emailController.text, passwordController.text);
 
       ScaffoldMessenger.of(context)
