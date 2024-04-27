@@ -35,6 +35,15 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('PhotoGram'),
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.messenger_outline,
+              color: Colors.white,
+            ),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: IndexedStack(
         index: currentIndex,
