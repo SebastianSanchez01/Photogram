@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_gram/screens/message_board.dart';
 import 'package:photo_gram/screens/profile.dart';
 import 'package:photo_gram/screens/search.dart';
 import 'package:photo_gram/backend/user_provider.dart';
@@ -52,7 +53,10 @@ class _HomePageState extends State<HomePage> {
               Icons.messenger_outline,
               color: Colors.white,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => MessageBoard()));
+            },
           ),
         ],
       ),
