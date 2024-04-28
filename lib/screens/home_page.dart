@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_gram/screens/profile.dart';
@@ -15,15 +16,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
-  final List<Widget> _children = [MainPage(), Search(), Profile()];
+  final List<Widget> _children = [
+    MainPage(),
+    Search(),
+    Profile(
+      uid: FirebaseAuth.instance.currentUser!.uid,
+    )
+  ];
 
   @override
   void initState() {
     super.initState();
-    addData();
+    addData().whenComplete(() {
+      setState(() {});
+    });
   }
 
-  addData() async {
+  Future<void> addData() async {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
     await userProvider.refreshUser();

@@ -87,9 +87,20 @@ class _AddPostState extends State<AddPost> {
 
     return _file == null
         ? Center(
-            child: ElevatedButton(
-              onPressed: () => selectImage(context),
-              child: Text("Select an Image here"),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () => selectImage(context),
+                  child: Text("Select an Image here"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Go back"),
+                )
+              ],
             ),
           )
         : Scaffold(

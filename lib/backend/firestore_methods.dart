@@ -35,6 +35,45 @@ class FirestoreMethods {
     return result;
   }
 
+  Future<String> deletePost(String postId) async {
+    String res = "Some error occurred";
+    try {
+      await _firestore.collection('posts').doc(postId).delete();
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> postComment(String postId, String text, String uid,
+      String name, String profilePic) async {
+    String result = '';
+    try {
+      if (text.isNotEmpty) {
+        String commentID = const Uuid().v1();
+        await _firestore
+            .collection('posts')
+            .doc(postId)
+            .collection('comments')
+            .doc(commentID)
+            .set({
+          'profilePic': profilePic,
+          'name': name,
+          'uid': uid,
+          'text': text,
+          'commentId': commentID,
+          'datePublished': DateTime.now(),
+        });
+        result = 'success';
+      }
+      return result;
+    } catch (e) {
+      result = e.toString();
+      return result;
+    }
+  }
+
   Future<String> likePost(String postId, String uid, List likes) async {
     String res = "Some error occurred";
     try {

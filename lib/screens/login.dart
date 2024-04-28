@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:photo_gram/screens/auth_service.dart';
+import 'package:photo_gram/backend/auth_service.dart';
 import 'package:photo_gram/screens/home_page.dart';
 import 'package:photo_gram/screens/register.dart';
 import 'package:photo_gram/backend/user_provider.dart';

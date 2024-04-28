@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_gram/backend/user_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:photo_gram/screens/auth_service.dart';
+import 'package:photo_gram/backend/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_gram/backend/utils.dart';
 

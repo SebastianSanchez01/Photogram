@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:photo_gram/screens/auth_service.dart';
+import 'package:photo_gram/backend/auth_service.dart';
 import 'package:photo_gram/backend/firebase_options.dart';
 import 'package:photo_gram/screens/login.dart';
 import 'package:firebase_core/firebase_core.dart';

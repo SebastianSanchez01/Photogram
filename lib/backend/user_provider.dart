@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:photo_gram/screens/auth_service.dart';
+import 'package:photo_gram/backend/auth_service.dart';
 import 'package:photo_gram/backend/user.dart';
 
 class UserProvider with ChangeNotifier {

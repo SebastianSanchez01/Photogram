@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:photo_gram/backend/storage_methods.dart';
 import 'package:photo_gram/backend/user.dart' as model;
 
-class AuthService extends ChangeNotifier {
+class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 

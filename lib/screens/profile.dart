@@ -1,26 +1,188 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_gram/backend/auth_service.dart';
 import 'package:photo_gram/screens/add_post.dart';
+import 'package:photo_gram/screens/login.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  final String uid;
+  const Profile({Key? key, required this.uid}) : super(key: key);
 
   @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
+  var userData = {};
+  int postLen = 0;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.uid)
+          .get();
+      var postSnap = await FirebaseFirestore.instance
+          .collection('posts')
+          .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      postLen = postSnap.docs.length;
+      userData = userSnap.data()!;
+    } catch (e) {
+      print(e.toString());
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text("Photogram Profile"),
-        IconButton(
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => AddPost()));
-            },
-            icon: Icon(Icons.upload))
-      ],
-    );
+    return isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          backgroundImage: NetworkImage(
+                            userData['photoUrl'],
+                          ),
+                          radius: 40,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            children: [
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    FirebaseAuth.instance.currentUser!.uid ==
+                                            widget.uid
+                                        ? Row(
+                                            children: <Widget>[
+                                              ElevatedButton(
+                                                child: Text('Add post'),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AddPost()));
+                                                },
+                                              ),
+                                              ElevatedButton(
+                                                child: Text('Sign out'),
+                                                onPressed: () async {
+                                                  await AuthService().signOut();
+                                                  if (context.mounted) {
+                                                    Navigator.of(context)
+                                                        .pushReplacement(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            Login(),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          )
+                                        : ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Go back'))
+                                  ]),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(
+                        top: 15,
+                      ),
+                      child: Text(
+                        userData['username'],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(
+                        top: 1,
+                      ),
+                      child: Text(
+                        userData['bio'],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(),
+              FutureBuilder(
+                future: FirebaseFirestore.instance
+                    .collection('posts')
+                    .where('uid', isEqualTo: widget.uid)
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: (snapshot.data! as dynamic).docs.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 1.5,
+                      childAspectRatio: 1,
+                    ),
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot snap =
+                          (snapshot.data! as dynamic).docs[index];
+
+                      return SizedBox(
+                        child: Image(
+                          image: NetworkImage(snap['postUrl']),
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    },
+                  );
+                },
+              )
+            ],
+          );
   }
 }
