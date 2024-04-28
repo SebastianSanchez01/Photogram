@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:photo_gram/backend/user.dart';
 import 'package:photo_gram/backend/user_provider.dart';
 import 'package:photo_gram/screens/profile.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
 class Search extends StatefulWidget {
-  const Search({super.key});
+  Search({super.key, required this.uid});
+  String uid;
 
   @override
   State<Search> createState() => _SearchState();
@@ -18,8 +18,12 @@ class _SearchState extends State<Search> {
   bool isShowUsers = false;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final User user = Provider.of<UserProvider>(context).getUser;
     return Column(
       children: <Widget>[
         Row(
@@ -32,25 +36,18 @@ class _SearchState extends State<Search> {
                       labelText: 'Search for a user...',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0))),
-                  onFieldSubmitted: (String _) {
-                    setState(() {
-                      isShowUsers = true;
-                    });
-                  },
                 ),
               ),
             ),
             SizedBox(width: 10),
-            /*  ElevatedButton(
+            ElevatedButton(
               onPressed: () {
                 setState(() {
                   isShowUsers = true;
                 });
               },
-              child: Text(
-                  'Search'), 
+              child: Text('Search'),
             ),
-          */
           ],
         ),
         (isShowUsers)
@@ -61,7 +58,6 @@ class _SearchState extends State<Search> {
                       'username',
                       isGreaterThanOrEqualTo: searchController.text,
                     )
-                    .where('username', isNotEqualTo: user.username)
                     .get(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting ||

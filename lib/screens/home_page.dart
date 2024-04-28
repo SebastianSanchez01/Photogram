@@ -18,7 +18,9 @@ class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   final List<Widget> _children = [
     MainPage(),
-    Search(),
+    Search(
+      uid: FirebaseAuth.instance.currentUser!.uid,
+    ),
     Profile(
       uid: FirebaseAuth.instance.currentUser!.uid,
     )
